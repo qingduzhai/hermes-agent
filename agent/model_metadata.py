@@ -613,7 +613,10 @@ DEFAULT_CONTEXT_LENGTHS = {
     # override in _endpoint_scoped_context_length). Longest-key-first substring
     # matching ensures "kimi-k3" resolves to 1M while older/unknown Kimi models
     # still hit the generic 256K fallback.
+    "kimi-k3-256k": 262144,
+    "k3-256k": 262144,
     "kimi-k3": 1_048_576,
+    "k3": 1_048_576,
     "kimi": 262144,
     # Upstage Solar — api.upstage.ai/v1/models does not return context_length,
     # so these fallbacks keep token budgeting / compression from probing down

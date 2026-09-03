@@ -13,6 +13,7 @@ from __future__ import annotations
 # Lowercased wire id → extra tokens appended to the search haystack only.
 _MODEL_SEARCH_ALIASES: dict[str, tuple[str, ...]] = {
     "k3": ("kimi-k3", "kimi"),
+    "k3-256k": ("kimi-k3-256k", "kimi-256k"),
     # OpenCode Zen serves the "Ox Alpha" stealth model under an opaque
     # preview slug; let users find it by its public codename.
     "x-preview-f-free": ("ox-alpha", "ox"),

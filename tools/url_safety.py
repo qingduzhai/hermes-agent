@@ -201,6 +201,14 @@ _TRUSTED_PRIVATE_IP_HOSTS = frozenset({
     "multimedia.nt.qq.com.cn",
 })
 
+# Trusted domain suffixes for Tencent / QQ media and pre-signed COS upload buckets.
+# These services legitimately resolve to 198.18.0.0/15 (RFC 2544 benchmark / Fake-IP)
+# in environments using TUN/Clash/Mihomo proxies.
+_TRUSTED_PRIVATE_IP_DOMAINS = (
+    "cos.accelerate.myqcloud.com",
+    "myqcloud.com",
+)
+
 _MAX_SSRF_CONNECT_IPS = 8
 
 # 100.64.0.0/10 (CGNAT / Shared Address Space, RFC 6598) is NOT covered by
@@ -409,7 +417,12 @@ def is_always_blocked_url(url: str) -> bool:
 
 def _allows_private_ip_resolution(hostname: str, scheme: str) -> bool:
     """Return True when a trusted HTTPS hostname may bypass IP-class blocking."""
-    return scheme == "https" and hostname in _TRUSTED_PRIVATE_IP_HOSTS
+    if scheme != "https":
+        return False
+    h = (hostname or "").lower().rstrip(".")
+    if h in _TRUSTED_PRIVATE_IP_HOSTS:
+        return True
+    return any(h == d or h.endswith("." + d) for d in _TRUSTED_PRIVATE_IP_DOMAINS)
 
 
 def is_safe_url(url: str) -> bool:

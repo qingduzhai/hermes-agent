@@ -152,6 +152,9 @@ class TestProxyEnvironmentDnsDelegation:
         ("https://sub.multimedia.nt.qq.com.cn/download?id=123", False),
         # ... and requires https
         ("http://multimedia.nt.qq.com.cn/download?id=123", False),
+        # QQ Bot chunked upload COS bucket domains allowed over https
+        ("https://qqbot-file-upload-1251316161.cos.accelerate.myqcloud.com/upload", True),
+        ("http://qqbot-file-upload-1251316161.cos.accelerate.myqcloud.com/upload", False),
     ])
     def test_qq_multimedia_hostname_exception(self, url, expected):
         with _resolves_to("198.18.0.23"):

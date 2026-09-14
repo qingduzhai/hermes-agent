@@ -221,7 +221,17 @@ def get_task_name() -> str:
     from hermes_cli.gateway import _profile_suffix  # local: avoids circular init during boot
 
     suffix = _profile_suffix()
-    return f"{_TASK_NAME_DEFAULT}_{suffix}" if suffix else _TASK_NAME_DEFAULT
+    candidate = f"{_TASK_NAME_DEFAULT}_{suffix}" if suffix else _TASK_NAME_DEFAULT
+    if suffix:
+        try:
+            code, _out, _err = _exec_schtasks(["/Query", "/TN", candidate])
+            if code != 0:
+                code_def, _out_def, _err_def = _exec_schtasks(["/Query", "/TN", _TASK_NAME_DEFAULT])
+                if code_def == 0:
+                    return _TASK_NAME_DEFAULT
+        except Exception:
+            pass
+    return candidate
 
 
 def _sanitize_filename(value: str) -> str:
